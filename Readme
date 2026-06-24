@@ -1,1 +1,30 @@
 
+# Azure Storage Data Exfiltration Detection with Microsoft Sentinel
+
+## Project Overview
+
+This project demonstrates a cloud security monitoring lab using Azure Storage, Log Analytics Workspace, Microsoft Sentinel, and KQL.
+
+The goal of this lab is to detect suspicious Azure Blob Storage download activity that may indicate possible data exfiltration. Fake sensitive files were uploaded to a private Azure Blob container, diagnostic logs were enabled, and Microsoft Sentinel was used to detect repeated blob download operations.
+
+## Tools Used
+
+- Microsoft Azure
+- Azure Blob Storage
+- Log Analytics Workspace
+- Microsoft Sentinel
+- KQL
+- Azure Monitor Diagnostic Settings
+- MITRE ATT&CK
+
+## Project Workflow
+
+1. Created an Azure Storage Account.
+2. Created a private Blob container.
+3. Uploaded fake sensitive files.
+4. Enabled Blob Storage diagnostic logs.
+5. Sent StorageRead, StorageWrite, and StorageDelete logs to Log Analytics Workspace.
+6. Queried blob download activity using KQL.
+7. Created a Microsoft Sentinel Analytics Rule.
+8. Generated a Sentinel incident for suspicious download activity.
+9. Investigated and documented the incident.

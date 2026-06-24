@@ -1,0 +1,16 @@
+let downloadThreshold = 5;
+StorageBlobLogs
+| where TimeGenerated > ago(1h)
+| where OperationName == "GetBlob"
+| where tostring(StatusCode) startswith "2"
+| summarize
+    DownloadCount = count(),
+    TotalBytesDownloaded = sum(tolong(ResponseBodySize)),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated),
+    TimeGenerated = max(TimeGenerated),
+    FilesAccessed = make_set(Uri, 20)
+    by CallerIpAddress, AuthenticationType, AccountName
+| where DownloadCount >= downloadThreshold
+| project TimeGenerated, AccountName, CallerIpAddress, AuthenticationType, DownloadCount, TotalBytesDownloaded, FirstSeen, LastSeen, FilesAccessed
+| order by DownloadCount desc

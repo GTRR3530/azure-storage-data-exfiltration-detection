@@ -33,44 +33,36 @@ The goal of this lab is to detect suspicious Azure Blob Storage download activit
 
 ### 1. Azure Storage Container
 
-![Storage Container](screenshots/storage-container.png)
+![Storage Container](storage-container.png)
 
-### 2. Diagnostic Settings
+### 2. Diagnostic Settings Enabled
 
-![Diagnostic Settings](screenshots/diagnostic-settings.png)
+![Diagnostic Settings](diagnostic-settings.png)
 
 ### 3. StorageBlobLogs Basic Result
 
-![StorageBlobLogs Basic Result](screenshots/storagebloblogs-basic-result.png)
+![StorageBlobLogs Basic Result](storagebloblogs-basic-result.png)
 
 ### 4. GetBlob Download Logs
 
-![GetBlob Download Logs](screenshots/getblob-download-logs.png)
+![GetBlob Download Logs](getblob-download-logs.png)
 
 ### 5. Detection Query Result
 
-![Detection Query Result](screenshots/detection-query-result.png)
+![Detection Query Result](detection-query-result.png)
 
-### 6. Sentinel Analytics Rule
+### 6. Microsoft Sentinel Analytics Rule
 
-![Sentinel Analytics Rule](screenshots/sentinel-analytics-rule.png)
+![Sentinel Analytics Rule](sentinel-analytics-rule.png)
 
-### 7. Sentinel Incident
+### 7. Alert Details
 
-![Sentinel Incident](screenshots/sentinel-incident.png)
+![Alert Details](alert-details.png)
 
-### 8. Alert Details
+### 8. Log Analytics Alert Result
 
-![Alert Details](screenshots/alert-details.png)
+![Log Analytics Alert Result](log-analytics-alert-result.png)
 
-### 9. Log Analytics Alert Result
+### 9. Closed Incident
 
-![Log Analytics Alert Result](screenshots/log-analytics-alert-result.png)
-
-### 10. Investigation Comment
-
-![Investigation Comment](screenshots/investigation-comment.png)
-
-### 11. Closed Incident
-
-![Closed Incident](screenshots/closed-incident.png)
+![Closed Incident](closed-incident.png)

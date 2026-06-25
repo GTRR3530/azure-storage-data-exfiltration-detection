@@ -1,68 +1,169 @@
+# 🛡️ Azure Storage Data Exfiltration Detection with Microsoft Sentinel
 
-# Azure Storage Data Exfiltration Detection with Microsoft Sentinel
+## 📌 Project Overview
 
-## Project Overview
+This project demonstrates a cloud security monitoring lab built using **Microsoft Azure**, **Azure Storage**, **Log Analytics Workspace**, **Microsoft Sentinel**, and **KQL**.
 
-This project demonstrates a cloud security monitoring lab using Azure Storage, Log Analytics Workspace, Microsoft Sentinel, and KQL.
+The main goal of this project is to detect suspicious Azure Blob Storage download activity that may indicate **possible data exfiltration**. In this lab, fake sensitive files were uploaded to a private Azure Blob container, diagnostic logs were enabled, and Microsoft Sentinel was used to detect repeated blob download operations from the same source.
 
-The goal of this lab is to detect suspicious Azure Blob Storage download activity that may indicate possible data exfiltration. Fake sensitive files were uploaded to a private Azure Blob container, diagnostic logs were enabled, and Microsoft Sentinel was used to detect repeated blob download operations.
+This project follows a basic SOC workflow:
 
-## Tools Used
+```text
+Log Collection → KQL Detection → Sentinel Analytics Rule → Alert → Incident → Investigation
+🎯 Objective
 
-- Microsoft Azure
-- Azure Blob Storage
-- Log Analytics Workspace
-- Microsoft Sentinel
-- KQL
-- Azure Monitor Diagnostic Settings
-- MITRE ATT&CK
+The objective of this lab is to understand how cloud storage access can be monitored and investigated using Microsoft Sentinel.
 
-## Project Workflow
+This project focuses on detecting:
 
-1. Created an Azure Storage Account.
-2. Created a private Blob container.
-3. Uploaded fake sensitive files.
-4. Enabled Blob Storage diagnostic logs.
-5. Sent StorageRead, StorageWrite, and StorageDelete logs to Log Analytics Workspace.
-6. Queried blob download activity using KQL.
-7. Created a Microsoft Sentinel Analytics Rule.
-8. Generated a Sentinel incident for suspicious download activity.
-9. Investigated and documented the incident.
+Multiple blob downloads from the same IP address
+Suspicious access to cloud storage
+Possible exposed SAS token usage
+Possible compromised credential activity
+Possible cloud data exfiltration behavior
 
-## Screenshots
+🧰 Tools & Services Used
+Microsoft Azure
+Azure Blob Storage
+Log Analytics Workspace
+Microsoft Sentinel
+Azure Monitor Diagnostic Settings
+KQL
+MITRE ATT&CK Framework
+GitHub
 
-### 1. Azure Storage Container
+🏗️ Lab Architecture
+Azure Blob Storage
+        ↓
+Storage Diagnostic Logs
+        ↓
+Log Analytics Workspace
+        ↓
+Microsoft Sentinel
+        ↓
+KQL Analytics Rule
+        ↓
+Alert & Incident Creation
+        ↓
 
-![Storage Container](storage-container.png)
+SOC Investigation
+⚙️ Project Workflow
+Created an Azure Storage Account.
+Created a private Blob container.
+Uploaded fake sensitive files for testing.
+Enabled diagnostic settings for Blob Storage.
+Sent StorageRead, StorageWrite, and StorageDelete logs to Log Analytics Workspace.
+Queried storage activity using KQL.
+Created a Microsoft Sentinel scheduled analytics rule.
+Generated a Sentinel alert and incident.
+Investigated the incident using a SOC-style workflow.
+Mapped the detection to MITRE ATT&CK techniques.
 
-### 2. Diagnostic Settings Enabled
+🔍 Detection Logic
 
-![Diagnostic Settings](diagnostic-settings.png)
+The detection identifies repeated GetBlob operations from the same IP address within a short time window.
 
-### 3. StorageBlobLogs Basic Result
+In a real-world environment, this type of activity may indicate:
 
-![StorageBlobLogs Basic Result](storagebloblogs-basic-result.png)
+Suspicious file download activity
+Exposed SAS token usage
+Compromised credentials
+Insider threat activity
+Possible data exfiltration from cloud storage
 
-### 4. GetBlob Download Logs
+🧪 KQL Detection Query
 
-![GetBlob Download Logs](getblob-download-logs.png)
+The KQL query used in this project is available in the repository:
 
-### 5. Detection Query Result
+kql/storage-exfiltration-detection.kql
 
-![Detection Query Result](detection-query-result.png)
+Main detection logic:
 
-### 6. Microsoft Sentinel Analytics Rule
+let downloadThreshold = 5;
+StorageBlobLogs
+| where TimeGenerated > ago(1h)
+| where OperationName == "GetBlob"
+| where tostring(StatusCode) startswith "2"
+| summarize
+    DownloadCount = count(),
+    TotalBytesDownloaded = sum(tolong(ResponseBodySize)),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated),
+    TimeGenerated = max(TimeGenerated),
+    FilesAccessed = make_set(Uri, 20)
+    by CallerIpAddress, AuthenticationType, AccountName
+| where DownloadCount >= downloadThreshold
+| project TimeGenerated, AccountName, CallerIpAddress, AuthenticationType, DownloadCount, TotalBytesDownloaded, FirstSeen, LastSeen, FilesAccessed
+| order by DownloadCount desc
 
-![Sentinel Analytics Rule](sentinel-analytics-rule.png)
+🚨 Sentinel Alert & Incident
 
-### 7. Alert Details
+A Microsoft Sentinel analytics rule was created to automatically detect suspicious blob download activity.
 
-![Alert Details](alert-details.png)
+When the rule matched the detection condition, Microsoft Sentinel generated an incident named:
 
-### 8. Log Analytics Alert Result
+Possible Azure Storage Data Exfiltration
 
-![Log Analytics Alert Result](log-analytics-alert-result.png)
+The incident was investigated by reviewing:
 
-### 9. Closed Incident
+Source IP address
+Storage account name
+Authentication type
+Download count
+Accessed files
+Alert severity
+Incident timeline
+🧠 MITRE ATT&CK Mapping
+Tactic	Technique	Technique ID	Reason
+Collection	Data from Cloud Storage	T1530	Detects access and download activity from Azure cloud storage
+Exfiltration	Exfiltration Over Web Service	T1567	Suspicious downloads may indicate data leaving the cloud environment
 
-![Closed Incident](closed-incident.png)
+📚 Skills Learned
+
+Through this project, I practiced:
+
+Azure Storage security monitoring
+Blob Storage diagnostic logging
+Log Analytics Workspace configuration
+KQL query writing
+Microsoft Sentinel analytics rule creation
+Alert and incident generation
+SOC-style incident investigation
+Cloud data exfiltration detection
+MITRE ATT&CK mapping
+GitHub documentation
+
+🧑‍💻 SOC Analyst Perspective
+
+In a real SOC environment, this detection would help analysts identify unusual access to cloud storage resources.
+
+A SOC analyst would investigate:
+
+Is the IP address trusted?
+Is the download activity expected?
+Was access performed using SAS token, account key, or identity-based authentication?
+Were sensitive files accessed?
+Was the activity during normal business hours?
+Is there any sign of compromised credentials?
+Should the token, account, or access key be revoked?
+✅ Outcome
+
+This project successfully demonstrated how Microsoft Sentinel can be used to monitor Azure Storage activity and detect possible data exfiltration behavior.
+
+The project covered the complete detection lifecycle:
+
+Cloud Activity → Log Collection → Detection Rule → Alert → Incident → Investigation
+🔮 Future Improvements
+Add entity mapping for IP and Azure resource details
+Send email or Microsoft Teams alert using Logic Apps
+Create automated response playbooks
+Add detection for public container exposure
+Detect unusual access from foreign locations
+Monitor large file downloads based on total data size
+Add user identity-based investigation with Microsoft Entra ID logs
+
+⚠️ Disclaimer
+
+This project was created only for educational and portfolio purposes.
+
+All activity was performed in a controlled Azure lab environment using fake files only. No real sensitive data was used.

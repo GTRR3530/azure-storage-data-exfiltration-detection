@@ -28,3 +28,49 @@ The goal of this lab is to detect suspicious Azure Blob Storage download activit
 7. Created a Microsoft Sentinel Analytics Rule.
 8. Generated a Sentinel incident for suspicious download activity.
 9. Investigated and documented the incident.
+
+## Screenshots
+
+### 1. Azure Storage Container
+
+![Storage Container](screenshots/storage-container.png)
+
+### 2. Diagnostic Settings
+
+![Diagnostic Settings](screenshots/diagnostic-settings.png)
+
+### 3. StorageBlobLogs Basic Result
+
+![StorageBlobLogs Basic Result](screenshots/storagebloblogs-basic-result.png)
+
+### 4. GetBlob Download Logs
+
+![GetBlob Download Logs](screenshots/getblob-download-logs.png)
+
+### 5. Detection Query Result
+
+![Detection Query Result](screenshots/detection-query-result.png)
+
+### 6. Sentinel Analytics Rule
+
+![Sentinel Analytics Rule](screenshots/sentinel-analytics-rule.png)
+
+### 7. Sentinel Incident
+
+![Sentinel Incident](screenshots/sentinel-incident.png)
+
+### 8. Alert Details
+
+![Alert Details](screenshots/alert-details.png)
+
+### 9. Log Analytics Alert Result
+
+![Log Analytics Alert Result](screenshots/log-analytics-alert-result.png)
+
+### 10. Investigation Comment
+
+![Investigation Comment](screenshots/investigation-comment.png)
+
+### 11. Closed Incident
+
+![Closed Incident](screenshots/closed-incident.png)
